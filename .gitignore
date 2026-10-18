@@ -1,0 +1,72 @@
+# Build directories
+build/
+cmake-build-*/
+out/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+Makefile
+build.ninja
+.ninja_deps
+.ninja_log
+
+# Compiled binaries and libraries
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dll
+*.dylib
+*.exe
+*.out
+
+# Debugging and profiling
+core
+core.*
+*.prof
+*.profraw
+*.gcda
+*.gcno
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Neovim
+Session.vim
+
+# Logs
+*.log
+
+# Medical images and datasets
+data/*
+!data/.gitkeep
+
+# Generated results
+results/*
+!results/.gitkeep
+
+# Model weights and exported models
+*.onnx
+*.pt
+*.pth
+*.safetensors
+*.engine
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
