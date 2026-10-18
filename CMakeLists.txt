@@ -16,6 +16,7 @@ find_package(OpenCV 5 REQUIRED COMPONENTS
 
 add_executable(pathology
     src/main.cpp
+    src/tiling.cpp
 )
 
 target_link_libraries(pathology PRIVATE
@@ -26,4 +27,20 @@ target_compile_options(pathology PRIVATE
     -Wall
     -Wextra
     -Wpedantic
+)
+target_include_directories(pathology PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+add_executable(test_tiling
+    tests/test_tiling.cpp
+    src/tiling.cpp
+)
+
+target_include_directories(test_tiling PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(test_tiling PRIVATE
+    ${OpenCV_LIBS}
 )
