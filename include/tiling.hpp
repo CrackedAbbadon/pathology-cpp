@@ -5,5 +5,5 @@
 #include <vector>
 
 std::vector<cv::Mat> split_into_tiles(const cv::Mat &image, int tile_size);
-
+bool is_background(const cv::Mat &tile);
 #endif // TILING_HPP

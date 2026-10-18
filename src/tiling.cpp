@@ -1,8 +1,13 @@
 #include "tiling.hpp"
+#include <cstddef>
 #include <opencv2/opencv.hpp>
 #include <stdexcept>
 #include <vector>
 using namespace std;
+
+double procent(int number, int percent) {
+  return (static_cast<double>(number) * percent) / 100.0;
+}
 
 vector<cv::Mat> split_into_tiles(const cv::Mat &image, int tile_size) {
   if (image.empty()) {
@@ -23,4 +28,37 @@ vector<cv::Mat> split_into_tiles(const cv::Mat &image, int tile_size) {
     }
   }
   return tiles;
+}
+
+bool is_background(const cv::Mat &tile) {
+  if (tile.empty()) {
+    throw invalid_argument("Image is empty");
+  }
+  if (tile.type() != CV_8UC3) {
+    throw std::invalid_argument("Expected a 8-bit 3-channel BGR image");
+  }
+  const size_t pixels = static_cast<size_t>(tile.rows) * tile.cols;
+  int count_white = 0;
+  for (int y = 0; y < tile.rows; ++y) {
+    const uchar *row = tile.ptr<uchar>(y);
+
+    for (int x = 0; x < tile.cols; ++x) {
+      bool white = true;
+
+      for (int c = 0; c < tile.channels(); ++c) {
+        uchar channel = row[x * tile.channels() + c];
+
+        if (channel < 220) {
+          white = false;
+          break;
+        }
+      }
+
+      if (white) {
+        count_white++;
+      }
+    }
+  }
+  double result = static_cast<double>(count_white) / pixels;
+  return result >= 0.8;
 }
