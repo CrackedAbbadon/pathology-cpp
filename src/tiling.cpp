@@ -62,3 +62,13 @@ bool is_background(const cv::Mat &tile) {
   double result = static_cast<double>(count_white) / pixels;
   return result >= 0.8;
 }
+
+vector<cv::Mat> filter_tiles(const vector<cv::Mat> &tiles) {
+  vector<cv::Mat> filtered;
+  for (const cv::Mat &tile : tiles) {
+    if (!is_background(tile)) {
+      filtered.push_back(tile);
+    }
+  }
+  return filtered;
+}

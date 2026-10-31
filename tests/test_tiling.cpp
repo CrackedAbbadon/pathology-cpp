@@ -68,6 +68,61 @@ void test_81_white_tile() {
 
   assert(is_back == true);
 }
+cv::Mat make_white_tile(int size = 100) {
+  return cv::Mat(size, size, CV_8UC3, cv::Scalar(255, 255, 255));
+}
+
+cv::Mat make_black_tile(int size = 100) {
+  return cv::Mat(size, size, CV_8UC3, cv::Scalar(0, 0, 0));
+}
+
+void test_filter_tiles_removes_background() {
+  std::vector<cv::Mat> tiles = {make_white_tile(), make_black_tile(),
+                                make_white_tile()};
+
+  auto filtered = filter_tiles(tiles);
+
+  assert(filtered.size() == 1);
+}
+
+void test_filter_tiles_keeps_non_background() {
+  std::vector<cv::Mat> tiles = {make_black_tile(), make_black_tile()};
+
+  auto filtered = filter_tiles(tiles);
+
+  assert(filtered.size() == 2);
+}
+
+void test_filter_tiles_all_background() {
+  std::vector<cv::Mat> tiles = {make_white_tile(), make_white_tile()};
+
+  auto filtered = filter_tiles(tiles);
+
+  assert(filtered.empty());
+}
+
+void test_filter_tiles_empty_input() {
+  std::vector<cv::Mat> tiles;
+
+  auto filtered = filter_tiles(tiles);
+
+  assert(filtered.empty());
+}
+
+void test_filter_tiles_threshold() {
+  cv::Mat tile(10, 10, CV_8UC3, cv::Scalar(255, 255, 255));
+
+  // 79 пикселей не белые: 21% фона
+  for (int i = 0; i < 21; ++i) {
+    tile.at<cv::Vec3b>(i / 10, i % 10) = cv::Vec3b(0, 0, 0);
+  }
+
+  std::vector<cv::Mat> tiles = {tile};
+
+  auto filtered = filter_tiles(tiles);
+
+  assert(filtered.size() == 1);
+}
 
 int main() {
   test_small_image();
@@ -86,6 +141,12 @@ int main() {
   std::cout << "[PASS] test_79_white_tile\n";
   test_81_white_tile();
   std::cout << "[PASS] test_81_white_tile\n";
+  test_filter_tiles_removes_background();
+  test_filter_tiles_keeps_non_background();
+  test_filter_tiles_all_background();
+  test_filter_tiles_empty_input();
+  test_filter_tiles_threshold();
+  std::cout << "[PASS] test_filter_tiles\n";
 
   std::cout << "All tests passed!\n";
 }
