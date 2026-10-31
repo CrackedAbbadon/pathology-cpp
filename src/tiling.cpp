@@ -1,7 +1,10 @@
 #include "tiling.hpp"
 #include <cstddef>
+#include <filesystem>
+#include <opencv2/imgcodecs.hpp>
 #include <opencv2/opencv.hpp>
 #include <stdexcept>
+#include <string>
 #include <vector>
 using namespace std;
 
@@ -71,4 +74,16 @@ vector<cv::Mat> filter_tiles(const vector<cv::Mat> &tiles) {
     }
   }
   return filtered;
+}
+
+void save_tiles(const vector<cv::Mat> &tiles) {
+  filesystem::create_directories("data");
+
+  for (size_t i = 0; i < tiles.size(); ++i) {
+    string path = "data/tile_" + std::to_string(i) + ".png";
+
+    if (!cv::imwrite(path, tiles[i])) {
+      throw std::runtime_error("Failed to save image: " + path);
+    }
+  }
 }
